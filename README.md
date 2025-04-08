@@ -1,4 +1,4 @@
-"# 64_Halls_KubeDock" 
+  "# 64_Game_KubeDock" 
 
 kubectl get all
 kubectl apply -f .
