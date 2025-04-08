@@ -1,0 +1,25 @@
+name: Build Backend Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-front:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t gamenpn46/back-k8s:latest . -f back-end-dockerfile
+          docker push gamenpn46/back-k8s:latest
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

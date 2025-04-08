@@ -1,0 +1,19 @@
+# ส่วนของ builder
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY front-end-k8s/package.json .
+RUN npm install
+COPY ./front-end-k8s .
+RUN npm run build
+
+# สร้าง image สุดท้าย
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=builder /app/.next .next
+# คัดลอกไฟล์อื่นๆ ที่จำเป็น เช่น package.json, public folder ฯลฯ
+COPY --from=builder /app/package.json .
+COPY --from=builder /app/public public
+# ติดตั้ง dependencies ที่จำเป็น
+RUN npm install next
+# ตั้งค่า command สำหรับการรันแอป
+CMD ["npm", "run", "start"]
